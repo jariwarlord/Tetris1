@@ -1,0 +1,11 @@
+body {
+    background-color: black;
+    color: aliceblue;
+    text-align: center;
+    flex-direction: column;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+canvas {
+    border: 1px solid #fff;
+}
