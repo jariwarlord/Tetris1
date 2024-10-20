@@ -40,15 +40,17 @@ let currentTetro;
 let position = { x: 0, y: 0 };
 let score = 0;
 let board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+let dropInterval = 1000;
+let lastDropTime = 0;
 
-function gameLoop() {
+function gameLoop(timestamp) {
     clearCanvas();
     drawGrid();
     drawTetro(currentTetro, position);
     drawBoard();
-    moveTetrominoDown();
-    requestAnimationFrame(gameLoop);
     drawScore();
+    moveTetrominoDown(timestamp);
+    requestAnimationFrame(gameLoop);
 }
 
 function getRandomTetro() {
@@ -71,16 +73,20 @@ function drawTetro(tetromino, position) {
 }
 
 // Hareket
-function moveTetrominoDown() {
-    position.y += 1;
-    if (checkCollision(0, 0)) { // Eğer çarpışma varsa
-        position.y -= 1; // Geri al
-        fixTetromino();
-        if (checkCollision(0, 0)) { // Oyun alanının üst kısmıyla çarpışma
-            alert("Game Over!");
-        } else {
-            currentTetro = getRandomTetro();
-            position = { x: Math.floor(COLS / 2) - 1, y: 0 };
+function moveTetrominoDown(timestamp) {
+    if (timestamp - lastDropTime >= dropInterval) {
+        position.y += 1; // Aşağı hareket et
+        lastDropTime = timestamp; // Son düşme zamanını güncelle
+
+        if (checkCollision(0, 0)) { // Eğer çarpışma varsa
+            position.y -= 1; // Geri al
+            fixTetromino();
+            if (checkCollision(0, 0)) { // Oyun alanının üst kısmıyla çarpışma
+                alert("Game Over!");
+            } else {
+                currentTetro = getRandomTetro();
+                position = { x: Math.floor(COLS / 2) - 1, y: 0 };
+            }
         }
     }
 }
@@ -97,6 +103,18 @@ function moveTetrominoRight() {
     if (checkCollision()) {
         position.x -= 1;
     }
+}
+function rotateTetromino(){
+    const originalShape = currentTetro.shape;
+    const rotatedShape = [];
+    
+    for (let col = 0; col < originalShape[0].length; col++) { 
+        rotatedShape[col] = [];
+        for(let row = originalShape.length -1; row >= 0; row--){
+            rotatedShape[col][row] = originalShape[row][col];
+        }
+    }
+
 }
 
 function fixTetromino() {
