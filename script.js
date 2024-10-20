@@ -161,6 +161,7 @@ function drawScore(){
     context.fillText('Score: ' + score, 0.1, 1);
 }
 function clearFullRows() {
+    let rowsCleared = 0;
     for (let row = ROWS - 1; row >= 0; row--) {
         let isFull = true;
 
@@ -176,8 +177,14 @@ function clearFullRows() {
             score += 10;
         }
     }
+    if(rowsCleared > 0){ 
+        score += rowsCleared * 100;
+        updateScoreDisplay();
+    }
 }
-
+function updateScoreDisplay(){
+    document.getElementById('score').innerText = `Score: ${score}`;
+}
 function checkCollision(offsetX = 0, offsetY = 0) {
     for (let row = 0; row < currentTetro.shape.length; row++) {
         for (let col = 0; col < currentTetro.shape[row].length; col++) {
