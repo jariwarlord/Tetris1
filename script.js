@@ -104,17 +104,26 @@ function moveTetrominoRight() {
         position.x -= 1;
     }
 }
-function rotateTetromino(){
+function rotateTetromino() {
     const originalShape = currentTetro.shape;
-    const rotatedShape = [];
-    
-    for (let col = 0; col < originalShape[0].length; col++) { 
-        rotatedShape[col] = [];
-        for(let row = originalShape.length -1; row >= 0; row--){
-            rotatedShape[col][row] = originalShape[row][col];
+    const rotatedShape = originalShape[0].map((_, index) =>
+        originalShape.map(row => row[index])
+    ).reverse();
+
+    currentTetro.shape = rotatedShape;
+
+    // Eğer çarpışma olursa, çeşitli pozisyonlara iterek düzeltmeye çalış
+    if (checkCollision(0, 0)) {
+        position.x += 1; // Sağ duvardan çek
+        if (checkCollision(0, 0)) {
+            position.x -= 2; // Sol duvardan çek
+            if (checkCollision(0, 0)) {
+                // Hiçbir şekilde sığmıyorsa eski şekle geri dön
+                position.x += 1;
+                currentTetro.shape = originalShape;
+            }
         }
     }
-
 }
 
 function fixTetromino() {
@@ -140,6 +149,9 @@ window.addEventListener('keydown', function (event) {
         case 'ArrowDown':
             moveTetrominoDown();
             break;
+        case 'ArrowUp':
+            rotateTetromino();
+            break;    
     }
 });
 //Skor
