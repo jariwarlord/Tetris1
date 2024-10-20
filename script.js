@@ -38,6 +38,8 @@ const TETRO = [
 let currentTetro;
 let position = { x :0 , y: 0};
 
+let board = Array.from({length: ROWS}, ()=> Array(COLS).fills(0));)
+
 function gameLoop(){
     clearCanvas();
     drawGrid();
@@ -95,13 +97,28 @@ function fixTetromino(){
     for(let row = 0; row < currentTetro.shape.length; row++){
         for(let col = 0; col < currentTetro.shape[row].length; col++){
             if(currentTetro.shape[row][col] !== 0){
-                board[position.y + row][position.x + col] = currentTetro;
+                board[position.y + row][position.x + col] = currentTetro.color;
             }
         }
     }
     clearFullRows();
 
 }
+//Klavye dinleme
+window.addEventListener('keydown', function(event) { 
+    switch(event.key){
+        case 'ArrowLeft':
+            moveTetrominoLeft();
+            break;
+        case 'ArrowRight':
+            moveTetrominoRight();
+            break;
+        case 'ArrowDown':
+            moveTetrominoDown();
+            break;    
+
+    }
+ });
 function clearFullRows(){
     for(let row = ROWS -1; row >= 0; row--){
         let isFull = true;
@@ -176,4 +193,4 @@ function drawGrid(){
 }
 window.onload = function(){ 
     startGame();
- }
+};
