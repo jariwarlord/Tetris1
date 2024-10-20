@@ -8,35 +8,46 @@ const BLOCK_SIZE = 20;
 
 const TETRO = [
     {
-        shape:[ [1, 1, 1], [0, 1, 0] ],
+        shape: [
+            [1, 1, 1],
+            [0, 1, 0]
+        ],
         color: 'cyan' // T
     },
     {
-        shape:[ [1,1], [1,1] ],
-        color: 'blue' // Kare
+        shape: [
+            [1, 1],
+            [1, 1]
+        ],
+        color: 'blue' // kare
     },
     {
-        shape:[ [1,1,1,1] ],
-        color: 'red' // Uzun yatay şekil
+        shape: [
+            [1, 1, 1, 1]
+        ],
+        color: 'red' // uzun yatay şekil
     },
     {
-        shape:[ [1,1,1], [0,0,1] ],
-        color: 'yellow' // Yatay L şekli
+        shape: [
+            [1, 1, 1],
+            [0, 0, 1]
+        ],
+        color: 'yellow' // yatay l şekli
     },
 ];
 
 let currentTetro;
 let position = { x: 0, y: 0 };
-
-let board = Array.from({length: ROWS}, () => Array(COLS).fill(0)); // Düzeltildi
+let score = 0;
+let board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
 
 function gameLoop() {
     clearCanvas();
     drawGrid();
     drawTetro(currentTetro, position);
-    moveTetrominoDown(); // Her döngüde tetrominoyu aşağı hareket ettiriyoruz
     drawBoard();
-    requestAnimationFrame(gameLoop); // Bu satır en sona alındı
+    moveTetrominoDown();
+    requestAnimationFrame(gameLoop);
 }
 
 function getRandomTetro() {
@@ -99,8 +110,8 @@ function fixTetromino() {
 }
 
 // Klavye dinleme
-window.addEventListener('keydown', function(event) { 
-    switch(event.key) {
+window.addEventListener('keydown', function (event) {
+    switch (event.key) {
         case 'ArrowLeft':
             moveTetrominoLeft();
             break;
@@ -109,14 +120,14 @@ window.addEventListener('keydown', function(event) {
             break;
         case 'ArrowDown':
             moveTetrominoDown();
-            break;    
+            break;
     }
 });
 
 function clearFullRows() {
     for (let row = ROWS - 1; row >= 0; row--) {
         let isFull = true;
-    
+
         for (let col = 0; col < COLS; col++) {
             if (!board[row][col]) {
                 isFull = false;
@@ -126,6 +137,7 @@ function clearFullRows() {
         if (isFull) {
             board.splice(row, 1);
             board.unshift(Array(COLS).fill(0));
+            score += 10;
         }
     }
 }
@@ -184,6 +196,6 @@ function drawGrid() {
     }
 }
 
-window.onload = function() { 
+window.onload = function () {
     startGame();
 };
