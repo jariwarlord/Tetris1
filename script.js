@@ -44,6 +44,7 @@ function gameLoop(){
     drawTetro(currentTetro, position);
     requestAnimationFrame(gameLoop);
     moveTetrominoDown();
+    drawBoard();
 };
 
 function getRandomTetro(){
@@ -68,10 +69,13 @@ function moveTetrominoDown(){
         position.y += 1;
     } else {
         fixTetromino();
+        if(checkCollision(0,0)){
+            alert("Game Over!");
+    } else {
         currentTetro = getRandomTetro();
         position = {x: Math.floor(COLS/2) - 1, y: 0};
+        }
     }
-    
 };
 function fixTetromino(){
     for(let row = 0; row < currentTetro.shape.length; row++){
@@ -84,12 +88,26 @@ function fixTetromino(){
 
 }
 
-function checkCollision(){
-    if(position.y + tetromino.shape.length >= ROWS){
-        return true;
+function checkCollision(offsetX = 0, offsetY = 0) {
+    for (let row = 0; row < currentTetro.shape.length; row++) {
+        for (let col = 0; col < currentTetro.shape[row].length; col++) {
+            if (currentTetro.shape[row][col] !== 0) {
+                const newX = position.x + col + offsetX;
+                const newY = position.y + row + offsetY;
+
+                // Oyun alanının dışına çıkma kontrolü
+                if (newX < 0 || newX >= COLS || newY >= ROWS) {
+                    return true;
+                }
+                // Sabitlenen bloklarla çarpışma kontrolü
+                if (newY >= 0 && board[newY][newX] !== 0) {
+                    return true;
+                }
+            }
+        }
     }
     return false;
-};
+}
 
 function clearCanvas() {
     context.clearRect(0,0, canvas.width, canvas.height);
@@ -102,6 +120,17 @@ function startGame(){
     requestAnimationFrame(gameLoop)
 };
 
+function drawBoard() {
+    for (let row = 0; row < ROWS; row++) {
+        for (let col = 0; col < COLS; col++) {
+            const color = board[row][col];
+            if (color) {
+                context.fillStyle = color;
+                context.fillRect(col, row, 1, 1);
+            }
+        }
+    }
+}
 
 
 function drawGrid(){
