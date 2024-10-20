@@ -48,6 +48,7 @@ function gameLoop() {
     drawBoard();
     moveTetrominoDown();
     requestAnimationFrame(gameLoop);
+    drawScore();
 }
 
 function getRandomTetro() {
@@ -123,7 +124,12 @@ window.addEventListener('keydown', function (event) {
             break;
     }
 });
-
+//Skor
+function drawScore(){
+    context.fillStyle = 'black';
+    context.font = '1px Arial';
+    context.fillText('Score: ' + score, 0.1, 1);
+}
 function clearFullRows() {
     for (let row = ROWS - 1; row >= 0; row--) {
         let isFull = true;
