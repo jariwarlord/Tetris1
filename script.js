@@ -64,6 +64,8 @@ function drawTetro(tetromino,position){
         }
     }
 }
+
+//Hareket
 function moveTetrominoDown(){
     if(!checkCollision()){
         position.y += 1;
@@ -77,6 +79,18 @@ function moveTetrominoDown(){
         }
     }
 };
+function moveTetrominoLeft(){
+    position.x -= 1;
+    if(checkCollision()){
+        position.x += 1;
+    }
+}
+function moveTetrominoRight(){
+    position.x += 1;
+    if(checkCollision()){
+        position.x += 1;
+    }
+}
 function fixTetromino(){
     for(let row = 0; row < currentTetro.shape.length; row++){
         for(let col = 0; col < currentTetro.shape[row].length; col++){
@@ -84,6 +98,24 @@ function fixTetromino(){
                 board[position.y + row][position.x + col] = currentTetro;
             }
         }
+    }
+    clearFullRows();
+
+}
+function clearFullRows(){
+    for(let row = ROWS -1; row >= 0; row--){
+        let isFull = true;
+    
+    for (let col=0; col < COLS; col++){
+        if(!board[row][col]){
+            isFull = false;
+            break;
+        }
+        
+    }
+    if(isFull){
+        board.splice(row, 1);
+        board.unshift(Array(COLS).fill(0));
     }
 
 }
